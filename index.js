@@ -22,10 +22,11 @@ async function run() {
         await client.connect();
         const database = client.db("foodCornerDb");
         const usersCollection = database.collection("products");
+        const ordersCollection = database.collection("orders");
         // create a document to insert
 
 
-        //post api 
+        //post api  Service 
         app.post('/services', async (req, res) => {
             const products = req.body;
             const result = await usersCollection.insertOne(products);
@@ -34,7 +35,7 @@ async function run() {
         })
 
 
-        // get api 
+        // get api  Service 
         app.get('/services', async (req, res) => {
             const cursor = usersCollection.find({});
             const products = await cursor.toArray();
@@ -42,16 +43,30 @@ async function run() {
         })
 
 
-
-
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
+            console.log(id);
             const query = { _id: ObjectId(id) };
             const product = await usersCollection.findOne(query);
             console.log('load user id', id);
             res.send(product);
         })
 
+        // order post
+        app.post('/orders', async (req, res) => {
+            const products = req.body;
+            console.log(products)
+            const result = await ordersCollection.insertOne(products);
+            res.json(result);
+
+        })
+
+        //order get api
+        app.get('/orders', async (req, res) => {
+            const cursor = usersCollection.find({});
+            const products = await cursor.toArray();
+            res.send(products);
+        })
 
 
     } finally {
